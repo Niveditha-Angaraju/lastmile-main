@@ -4,9 +4,9 @@ import grpc
 import warnings
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from . import matching_pb2 as matching__pb2
+from services.common_lib.protos_generated import location_pb2 as location__pb2
 
-GRPC_GENERATED_VERSION = '1.70.0'
+GRPC_GENERATED_VERSION = '1.76.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -19,14 +19,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in matching_pb2_grpc.py depends on'
+        + ' but the generated code in location_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class MatchingServiceStub(object):
+class LocationServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,35 +35,34 @@ class MatchingServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.FindMatches = channel.unary_unary(
-                '/lastmile.matching.MatchingService/FindMatches',
-                request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+        self.ReportLocation = channel.unary_unary(
+                '/lastmile.location.LocationService/ReportLocation',
+                request_serializer=location__pb2.DriverLocation.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
-        self.StreamMatches = channel.stream_stream(
-                '/lastmile.matching.MatchingService/StreamMatches',
-                request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+        self.StreamProximity = channel.stream_stream(
+                '/lastmile.location.LocationService/StreamProximity',
+                request_serializer=location__pb2.DriverLocation.SerializeToString,
+                response_deserializer=location__pb2.ProximityEvent.FromString,
                 _registered_method=True)
         self.Health = channel.unary_unary(
-                '/lastmile.matching.MatchingService/Health',
+                '/lastmile.location.LocationService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
 
 
-class MatchingServiceServicer(object):
+class LocationServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def FindMatches(self, request, context):
+    def ReportLocation(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def StreamMatches(self, request_iterator, context):
-        """streaming API for proposals and responses (optional)
-        """
+    def StreamProximity(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -75,36 +74,36 @@ class MatchingServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MatchingServiceServicer_to_server(servicer, server):
+def add_LocationServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'FindMatches': grpc.unary_unary_rpc_method_handler(
-                    servicer.FindMatches,
-                    request_deserializer=matching__pb2.MatchRequest.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+            'ReportLocation': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReportLocation,
+                    request_deserializer=location__pb2.DriverLocation.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
-            'StreamMatches': grpc.stream_stream_rpc_method_handler(
-                    servicer.StreamMatches,
-                    request_deserializer=matching__pb2.MatchRequest.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+            'StreamProximity': grpc.stream_stream_rpc_method_handler(
+                    servicer.StreamProximity,
+                    request_deserializer=location__pb2.DriverLocation.FromString,
+                    response_serializer=location__pb2.ProximityEvent.SerializeToString,
             ),
             'Health': grpc.unary_unary_rpc_method_handler(
                     servicer.Health,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'lastmile.matching.MatchingService', rpc_method_handlers)
+            'lastmile.location.LocationService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('lastmile.matching.MatchingService', rpc_method_handlers)
+    server.add_registered_method_handlers('lastmile.location.LocationService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MatchingService(object):
+class LocationService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def FindMatches(request,
+    def ReportLocation(request,
             target,
             options=(),
             channel_credentials=None,
@@ -117,9 +116,9 @@ class MatchingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/lastmile.matching.MatchingService/FindMatches',
-            matching__pb2.MatchRequest.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            '/lastmile.location.LocationService/ReportLocation',
+            location__pb2.DriverLocation.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
@@ -131,7 +130,7 @@ class MatchingService(object):
             _registered_method=True)
 
     @staticmethod
-    def StreamMatches(request_iterator,
+    def StreamProximity(request_iterator,
             target,
             options=(),
             channel_credentials=None,
@@ -144,9 +143,9 @@ class MatchingService(object):
         return grpc.experimental.stream_stream(
             request_iterator,
             target,
-            '/lastmile.matching.MatchingService/StreamMatches',
-            matching__pb2.MatchRequest.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            '/lastmile.location.LocationService/StreamProximity',
+            location__pb2.DriverLocation.SerializeToString,
+            location__pb2.ProximityEvent.FromString,
             options,
             channel_credentials,
             insecure,
@@ -171,9 +170,9 @@ class MatchingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/lastmile.matching.MatchingService/Health',
+            '/lastmile.location.LocationService/Health',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,

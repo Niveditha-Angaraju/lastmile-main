@@ -4,9 +4,9 @@ import grpc
 import warnings
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from . import matching_pb2 as matching__pb2
+from services.common_lib.protos_generated import rider_pb2 as rider__pb2
 
-GRPC_GENERATED_VERSION = '1.70.0'
+GRPC_GENERATED_VERSION = '1.76.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -19,14 +19,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in matching_pb2_grpc.py depends on'
+        + ' but the generated code in rider_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class MatchingServiceStub(object):
+class RiderServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,35 +35,45 @@ class MatchingServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.FindMatches = channel.unary_unary(
-                '/lastmile.matching.MatchingService/FindMatches',
-                request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+        self.RegisterRider = channel.unary_unary(
+                '/lastmile.rider.RiderService/RegisterRider',
+                request_serializer=rider__pb2.RegisterRiderRequest.SerializeToString,
+                response_deserializer=rider__pb2.RegisterRiderResponse.FromString,
                 _registered_method=True)
-        self.StreamMatches = channel.stream_stream(
-                '/lastmile.matching.MatchingService/StreamMatches',
-                request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+        self.RequestPickup = channel.unary_unary(
+                '/lastmile.rider.RiderService/RequestPickup',
+                request_serializer=rider__pb2.RiderRequest.SerializeToString,
+                response_deserializer=rider__pb2.RiderResponse.FromString,
+                _registered_method=True)
+        self.TrackRide = channel.unary_unary(
+                '/lastmile.rider.RiderService/TrackRide',
+                request_serializer=rider__pb2.RiderRequest.SerializeToString,
+                response_deserializer=rider__pb2.RiderResponse.FromString,
                 _registered_method=True)
         self.Health = channel.unary_unary(
-                '/lastmile.matching.MatchingService/Health',
+                '/lastmile.rider.RiderService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+                response_deserializer=rider__pb2.RiderResponse.FromString,
                 _registered_method=True)
 
 
-class MatchingServiceServicer(object):
+class RiderServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def FindMatches(self, request, context):
+    def RegisterRider(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def StreamMatches(self, request_iterator, context):
-        """streaming API for proposals and responses (optional)
-        """
+    def RequestPickup(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def TrackRide(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -75,36 +85,41 @@ class MatchingServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MatchingServiceServicer_to_server(servicer, server):
+def add_RiderServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'FindMatches': grpc.unary_unary_rpc_method_handler(
-                    servicer.FindMatches,
-                    request_deserializer=matching__pb2.MatchRequest.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+            'RegisterRider': grpc.unary_unary_rpc_method_handler(
+                    servicer.RegisterRider,
+                    request_deserializer=rider__pb2.RegisterRiderRequest.FromString,
+                    response_serializer=rider__pb2.RegisterRiderResponse.SerializeToString,
             ),
-            'StreamMatches': grpc.stream_stream_rpc_method_handler(
-                    servicer.StreamMatches,
-                    request_deserializer=matching__pb2.MatchRequest.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+            'RequestPickup': grpc.unary_unary_rpc_method_handler(
+                    servicer.RequestPickup,
+                    request_deserializer=rider__pb2.RiderRequest.FromString,
+                    response_serializer=rider__pb2.RiderResponse.SerializeToString,
+            ),
+            'TrackRide': grpc.unary_unary_rpc_method_handler(
+                    servicer.TrackRide,
+                    request_deserializer=rider__pb2.RiderRequest.FromString,
+                    response_serializer=rider__pb2.RiderResponse.SerializeToString,
             ),
             'Health': grpc.unary_unary_rpc_method_handler(
                     servicer.Health,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+                    response_serializer=rider__pb2.RiderResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'lastmile.matching.MatchingService', rpc_method_handlers)
+            'lastmile.rider.RiderService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('lastmile.matching.MatchingService', rpc_method_handlers)
+    server.add_registered_method_handlers('lastmile.rider.RiderService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MatchingService(object):
+class RiderService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def FindMatches(request,
+    def RegisterRider(request,
             target,
             options=(),
             channel_credentials=None,
@@ -117,9 +132,9 @@ class MatchingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/lastmile.matching.MatchingService/FindMatches',
-            matching__pb2.MatchRequest.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            '/lastmile.rider.RiderService/RegisterRider',
+            rider__pb2.RegisterRiderRequest.SerializeToString,
+            rider__pb2.RegisterRiderResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -131,7 +146,7 @@ class MatchingService(object):
             _registered_method=True)
 
     @staticmethod
-    def StreamMatches(request_iterator,
+    def RequestPickup(request,
             target,
             options=(),
             channel_credentials=None,
@@ -141,12 +156,39 @@ class MatchingService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(
-            request_iterator,
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            '/lastmile.matching.MatchingService/StreamMatches',
-            matching__pb2.MatchRequest.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            '/lastmile.rider.RiderService/RequestPickup',
+            rider__pb2.RiderRequest.SerializeToString,
+            rider__pb2.RiderResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def TrackRide(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/lastmile.rider.RiderService/TrackRide',
+            rider__pb2.RiderRequest.SerializeToString,
+            rider__pb2.RiderResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -171,9 +213,9 @@ class MatchingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/lastmile.matching.MatchingService/Health',
+            '/lastmile.rider.RiderService/Health',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            rider__pb2.RiderResponse.FromString,
             options,
             channel_credentials,
             insecure,

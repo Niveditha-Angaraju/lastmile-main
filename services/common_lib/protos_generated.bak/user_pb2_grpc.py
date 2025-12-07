@@ -4,9 +4,9 @@ import grpc
 import warnings
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from . import matching_pb2 as matching__pb2
+from services.common_lib.protos_generated import user_pb2 as user__pb2
 
-GRPC_GENERATED_VERSION = '1.70.0'
+GRPC_GENERATED_VERSION = '1.76.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -19,14 +19,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in matching_pb2_grpc.py depends on'
+        + ' but the generated code in user_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class MatchingServiceStub(object):
+class UserServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,35 +35,45 @@ class MatchingServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.FindMatches = channel.unary_unary(
-                '/lastmile.matching.MatchingService/FindMatches',
-                request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+        self.RegisterUser = channel.unary_unary(
+                '/lastmile.user.UserService/RegisterUser',
+                request_serializer=user__pb2.RegisterUserRequest.SerializeToString,
+                response_deserializer=user__pb2.RegisterUserResponse.FromString,
                 _registered_method=True)
-        self.StreamMatches = channel.stream_stream(
-                '/lastmile.matching.MatchingService/StreamMatches',
-                request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+        self.Login = channel.unary_unary(
+                '/lastmile.user.UserService/Login',
+                request_serializer=user__pb2.LoginRequest.SerializeToString,
+                response_deserializer=user__pb2.LoginResponse.FromString,
+                _registered_method=True)
+        self.GetUser = channel.unary_unary(
+                '/lastmile.user.UserService/GetUser',
+                request_serializer=user__pb2.GetUserRequest.SerializeToString,
+                response_deserializer=user__pb2.GetUserResponse.FromString,
                 _registered_method=True)
         self.Health = channel.unary_unary(
-                '/lastmile.matching.MatchingService/Health',
+                '/lastmile.user.UserService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+                response_deserializer=user__pb2.GetUserResponse.FromString,
                 _registered_method=True)
 
 
-class MatchingServiceServicer(object):
+class UserServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def FindMatches(self, request, context):
+    def RegisterUser(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def StreamMatches(self, request_iterator, context):
-        """streaming API for proposals and responses (optional)
-        """
+    def Login(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -75,36 +85,41 @@ class MatchingServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MatchingServiceServicer_to_server(servicer, server):
+def add_UserServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'FindMatches': grpc.unary_unary_rpc_method_handler(
-                    servicer.FindMatches,
-                    request_deserializer=matching__pb2.MatchRequest.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+            'RegisterUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.RegisterUser,
+                    request_deserializer=user__pb2.RegisterUserRequest.FromString,
+                    response_serializer=user__pb2.RegisterUserResponse.SerializeToString,
             ),
-            'StreamMatches': grpc.stream_stream_rpc_method_handler(
-                    servicer.StreamMatches,
-                    request_deserializer=matching__pb2.MatchRequest.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+            'Login': grpc.unary_unary_rpc_method_handler(
+                    servicer.Login,
+                    request_deserializer=user__pb2.LoginRequest.FromString,
+                    response_serializer=user__pb2.LoginResponse.SerializeToString,
+            ),
+            'GetUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUser,
+                    request_deserializer=user__pb2.GetUserRequest.FromString,
+                    response_serializer=user__pb2.GetUserResponse.SerializeToString,
             ),
             'Health': grpc.unary_unary_rpc_method_handler(
                     servicer.Health,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+                    response_serializer=user__pb2.GetUserResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'lastmile.matching.MatchingService', rpc_method_handlers)
+            'lastmile.user.UserService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('lastmile.matching.MatchingService', rpc_method_handlers)
+    server.add_registered_method_handlers('lastmile.user.UserService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MatchingService(object):
+class UserService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def FindMatches(request,
+    def RegisterUser(request,
             target,
             options=(),
             channel_credentials=None,
@@ -117,9 +132,9 @@ class MatchingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/lastmile.matching.MatchingService/FindMatches',
-            matching__pb2.MatchRequest.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            '/lastmile.user.UserService/RegisterUser',
+            user__pb2.RegisterUserRequest.SerializeToString,
+            user__pb2.RegisterUserResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -131,7 +146,7 @@ class MatchingService(object):
             _registered_method=True)
 
     @staticmethod
-    def StreamMatches(request_iterator,
+    def Login(request,
             target,
             options=(),
             channel_credentials=None,
@@ -141,12 +156,39 @@ class MatchingService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(
-            request_iterator,
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            '/lastmile.matching.MatchingService/StreamMatches',
-            matching__pb2.MatchRequest.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            '/lastmile.user.UserService/Login',
+            user__pb2.LoginRequest.SerializeToString,
+            user__pb2.LoginResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/lastmile.user.UserService/GetUser',
+            user__pb2.GetUserRequest.SerializeToString,
+            user__pb2.GetUserResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -171,9 +213,9 @@ class MatchingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/lastmile.matching.MatchingService/Health',
+            '/lastmile.user.UserService/Health',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            user__pb2.GetUserResponse.FromString,
             options,
             channel_credentials,
             insecure,

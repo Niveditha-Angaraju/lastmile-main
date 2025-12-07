@@ -4,9 +4,9 @@ import grpc
 import warnings
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from . import matching_pb2 as matching__pb2
+from services.common_lib.protos_generated import trip_pb2 as trip__pb2
 
-GRPC_GENERATED_VERSION = '1.70.0'
+GRPC_GENERATED_VERSION = '1.76.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -19,14 +19,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in matching_pb2_grpc.py depends on'
+        + ' but the generated code in trip_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class MatchingServiceStub(object):
+class TripServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,35 +35,45 @@ class MatchingServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.FindMatches = channel.unary_unary(
-                '/lastmile.matching.MatchingService/FindMatches',
-                request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+        self.CreateTrip = channel.unary_unary(
+                '/lastmile.trip.TripService/CreateTrip',
+                request_serializer=trip__pb2.CreateTripRequest.SerializeToString,
+                response_deserializer=trip__pb2.CreateTripResponse.FromString,
                 _registered_method=True)
-        self.StreamMatches = channel.stream_stream(
-                '/lastmile.matching.MatchingService/StreamMatches',
-                request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+        self.UpdateTrip = channel.unary_unary(
+                '/lastmile.trip.TripService/UpdateTrip',
+                request_serializer=trip__pb2.UpdateTripRequest.SerializeToString,
+                response_deserializer=trip__pb2.UpdateTripResponse.FromString,
+                _registered_method=True)
+        self.GetTrip = channel.unary_unary(
+                '/lastmile.trip.TripService/GetTrip',
+                request_serializer=trip__pb2.GetTripRequest.SerializeToString,
+                response_deserializer=trip__pb2.GetTripResponse.FromString,
                 _registered_method=True)
         self.Health = channel.unary_unary(
-                '/lastmile.matching.MatchingService/Health',
+                '/lastmile.trip.TripService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
+                response_deserializer=trip__pb2.CreateTripResponse.FromString,
                 _registered_method=True)
 
 
-class MatchingServiceServicer(object):
+class TripServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def FindMatches(self, request, context):
+    def CreateTrip(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def StreamMatches(self, request_iterator, context):
-        """streaming API for proposals and responses (optional)
-        """
+    def UpdateTrip(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTrip(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -75,36 +85,41 @@ class MatchingServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MatchingServiceServicer_to_server(servicer, server):
+def add_TripServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'FindMatches': grpc.unary_unary_rpc_method_handler(
-                    servicer.FindMatches,
-                    request_deserializer=matching__pb2.MatchRequest.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+            'CreateTrip': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateTrip,
+                    request_deserializer=trip__pb2.CreateTripRequest.FromString,
+                    response_serializer=trip__pb2.CreateTripResponse.SerializeToString,
             ),
-            'StreamMatches': grpc.stream_stream_rpc_method_handler(
-                    servicer.StreamMatches,
-                    request_deserializer=matching__pb2.MatchRequest.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+            'UpdateTrip': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateTrip,
+                    request_deserializer=trip__pb2.UpdateTripRequest.FromString,
+                    response_serializer=trip__pb2.UpdateTripResponse.SerializeToString,
+            ),
+            'GetTrip': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTrip,
+                    request_deserializer=trip__pb2.GetTripRequest.FromString,
+                    response_serializer=trip__pb2.GetTripResponse.SerializeToString,
             ),
             'Health': grpc.unary_unary_rpc_method_handler(
                     servicer.Health,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=matching__pb2.MatchResponse.SerializeToString,
+                    response_serializer=trip__pb2.CreateTripResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'lastmile.matching.MatchingService', rpc_method_handlers)
+            'lastmile.trip.TripService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('lastmile.matching.MatchingService', rpc_method_handlers)
+    server.add_registered_method_handlers('lastmile.trip.TripService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MatchingService(object):
+class TripService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def FindMatches(request,
+    def CreateTrip(request,
             target,
             options=(),
             channel_credentials=None,
@@ -117,9 +132,9 @@ class MatchingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/lastmile.matching.MatchingService/FindMatches',
-            matching__pb2.MatchRequest.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            '/lastmile.trip.TripService/CreateTrip',
+            trip__pb2.CreateTripRequest.SerializeToString,
+            trip__pb2.CreateTripResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -131,7 +146,7 @@ class MatchingService(object):
             _registered_method=True)
 
     @staticmethod
-    def StreamMatches(request_iterator,
+    def UpdateTrip(request,
             target,
             options=(),
             channel_credentials=None,
@@ -141,12 +156,39 @@ class MatchingService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(
-            request_iterator,
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            '/lastmile.matching.MatchingService/StreamMatches',
-            matching__pb2.MatchRequest.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            '/lastmile.trip.TripService/UpdateTrip',
+            trip__pb2.UpdateTripRequest.SerializeToString,
+            trip__pb2.UpdateTripResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetTrip(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/lastmile.trip.TripService/GetTrip',
+            trip__pb2.GetTripRequest.SerializeToString,
+            trip__pb2.GetTripResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -171,9 +213,9 @@ class MatchingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/lastmile.matching.MatchingService/Health',
+            '/lastmile.trip.TripService/Health',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            matching__pb2.MatchResponse.FromString,
+            trip__pb2.CreateTripResponse.FromString,
             options,
             channel_credentials,
             insecure,
