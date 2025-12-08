@@ -1,11 +1,13 @@
-FROM python:3.11-slim
+FROM lastmile/python-base:3.11
+ENV PORT=50052 PYTHONPATH=/app
 WORKDIR /app
 COPY services/driver_service/requirements.txt /app/requirements.txt
-RUN apt-get update && apt-get install -y gcc && rm -rf /var/lib/apt/lists/*
-RUN pip install --upgrade pip
-RUN pip install -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 COPY services/driver_service /app/services/driver_service
 COPY services/common_lib/protos_generated /app/services/common_lib/protos_generated
-ENV PYTHONPATH=/app
 EXPOSE 50052
-CMD ["python", "services/driver_service/app.py"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 CMD python -c "import socket,os,sys;s=socket.socket();\
+try: s.settimeout(2); s.connect(('127.0.0.1', int(os.getenv('PORT','50052')))); s.close(); sys.exit(0) \
+except: sys.exit(1)"
+CMD ["python", "-u", "services/driver_service/app.py"]
+

@@ -1,0 +1,33 @@
+# infra/docker/Dockerfile.base
+FROM python:3.11-slim
+
+# Common environment
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+# Install common system deps used by services
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    curl \
+    build-essential \
+ && rm -rf /var/lib/apt/lists/*
+
+# upgrade pip
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# Add a non-root user
+RUN addgroup --system app && adduser --system --ingroup app app \
+ && mkdir -p /app/log /app/tmp \
+ && chown -R app:app /app
+
+USER app
+
+# default work dir for child images
+WORKDIR /app
+
+# NOTE: don't copy project files here; child images will copy their own files.
