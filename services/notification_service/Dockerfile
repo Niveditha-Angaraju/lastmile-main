@@ -1,4 +1,4 @@
-FROM lastmile/python-base:3.11
+FROM nivedithavarma/lastmile-python-base:3.11
 ENV PORT=8006 PYTHONPATH=/app
 WORKDIR /app
 COPY services/notification_service/requirements.txt /app/requirements.txt

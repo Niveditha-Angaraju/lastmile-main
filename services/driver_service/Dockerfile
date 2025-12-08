@@ -1,4 +1,5 @@
-FROM lastmile/python-base:3.11
+FROM nivedithavarma/lastmile-python-base:3.11
+
 ENV PORT=50052 PYTHONPATH=/app
 WORKDIR /app
 COPY services/driver_service/requirements.txt /app/requirements.txt

@@ -7,3 +7,30 @@ INFO:pika.adapters.utils.connection_workflow:AMQPConnectionWorkflow - reporting 
 INFO:pika.adapters.blocking_connection:Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f456f382940> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
 INFO:pika.adapters.blocking_connection:Created channel=1
 INFO:location_service:LocationService consuming driver.locations
+ERROR:pika.adapters.utils.io_services_utils:Socket EOF; <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('127.0.0.1', 47972), raddr=('127.0.0.1', 5672)>
+ERROR:pika.adapters.base_connection:Transport indicated EOF.
+INFO:pika.adapters.utils.io_services_utils:protocol.eof_received() elected to close: <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('127.0.0.1', 47972), raddr=('127.0.0.1', 5672)>
+INFO:pika.adapters.utils.io_services_utils:_AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('127.0.0.1', 47972), raddr=('127.0.0.1', 5672)>
+INFO:pika.adapters.utils.io_services_utils:Deactivating transport: state=1; <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('127.0.0.1', 47972), raddr=('127.0.0.1', 5672)>
+ERROR:pika.adapters.base_connection:connection_lost: StreamLostError: ('Transport indicated EOF',)
+INFO:pika.connection:AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=StreamLostError: ('Transport indicated EOF',); pending-error=None
+INFO:pika.connection:Stack terminated due to StreamLostError: ('Transport indicated EOF',)
+INFO:pika.adapters.utils.io_services_utils:Closing transport socket and unlinking: state=3; <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('127.0.0.1', 47972), raddr=('127.0.0.1', 5672)>
+ERROR:pika.adapters.blocking_connection:Unexpected connection close detected: StreamLostError: ('Transport indicated EOF',)
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/lib/python3.8/threading.py", line 932, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.8/threading.py", line 870, in run
+    self._target(*self._args, **self._kwargs)
+  File "services/location_service/app.py", line 130, in start_rabbit_consumer
+    ch.start_consuming()
+  File "/home/niveditha/lastmile-main/.venv/lib/python3.8/site-packages/pika/adapters/blocking_connection.py", line 1883, in start_consuming
+    self._process_data_events(time_limit=None)
+  File "/home/niveditha/lastmile-main/.venv/lib/python3.8/site-packages/pika/adapters/blocking_connection.py", line 2044, in _process_data_events
+    self.connection.process_data_events(time_limit=time_limit)
+  File "/home/niveditha/lastmile-main/.venv/lib/python3.8/site-packages/pika/adapters/blocking_connection.py", line 842, in process_data_events
+    self._flush_output(common_terminator)
+  File "/home/niveditha/lastmile-main/.venv/lib/python3.8/site-packages/pika/adapters/blocking_connection.py", line 523, in _flush_output
+    raise self._closed_result.value.error
+pika.exceptions.StreamLostError: Transport indicated EOF
