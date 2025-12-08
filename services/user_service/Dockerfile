@@ -2,7 +2,10 @@ FROM nivedithavarma/lastmile-python-base:3.11
 ENV PORT=8001 PYTHONPATH=/app
 WORKDIR /app
 COPY services/user_service/requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+USER root
+RUN python -m pip install --upgrade pip setuptools wheel \
+ && pip install --no-cache-dir -r /app/requirements.txt
+USER app
 COPY services/user_service /app/services/user_service
 COPY services/common_lib/protos_generated /app/services/common_lib/protos_generated
 EXPOSE 8001

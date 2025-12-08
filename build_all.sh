@@ -20,7 +20,7 @@ SERVICES=(
   ["station-service"]="services/station_service/Dockerfile"
   ["notification-service"]="services/notification_service/Dockerfile"
   ["gateway-service"]="services/gateway_service/Dockerfile"
-  ["gateway-service"]="services/trip_service/Dockerfile"
+  ["trip-service"]="services/trip_service/Dockerfile"
 )
 
 # Helper functions

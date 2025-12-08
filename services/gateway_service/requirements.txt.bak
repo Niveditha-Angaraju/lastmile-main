@@ -1,7 +1,7 @@
-fastapi==0.100.0
+fastapi==0.95.2
 uvicorn==0.22.0
 aioredis==2.0.1
 httpx==0.24.0
-pydantic==2.12.5
 grpcio==1.57.0
 protobuf==4.24.3
+pydantic==2.3.1
