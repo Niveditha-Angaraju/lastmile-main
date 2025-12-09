@@ -1,4 +1,1 @@
-Traceback (most recent call last):
-  File "services/station_service/app.py", line 14, in <module>
-    from geoalchemy2 import Geometry
-ModuleNotFoundError: No module named 'geoalchemy2'
+INFO:station_service:StationService gRPC server started on port 50051
