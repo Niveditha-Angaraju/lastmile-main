@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: lastmile
   name: rider-service
 spec:
   replicas: 1
@@ -9,6 +10,7 @@ spec:
       app: rider-service
   template:
     metadata:
+  namespace: lastmile
       labels:
         app: rider-service
     spec:
@@ -31,6 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: lastmile
   name: rider-service
 spec:
   selector:
@@ -38,4 +41,3 @@ spec:
   ports:
   - port: 50057
     targetPort: 50057
-    
