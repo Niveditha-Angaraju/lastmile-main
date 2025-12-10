@@ -7,12 +7,10 @@ spec:
   selector:
     app: rabbitmq
   ports:
-    - name: amqp
-      port: 5672
-      targetPort: 5672
-    - name: management
-      port: 15672
-      targetPort: 15672
+    - port: 5672
+      name: amqp
+    - port: 15672
+      name: mgmt
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -34,23 +32,15 @@ spec:
         image: rabbitmq:3.11-management
         env:
         - name: RABBITMQ_DEFAULT_USER
-          value: guest
+          valueFrom:
+            secretKeyRef:
+              name: lastmile-secrets
+              key: RABBITMQ_DEFAULT_USER
         - name: RABBITMQ_DEFAULT_PASS
-          value: guest
+          valueFrom:
+            secretKeyRef:
+              name: lastmile-secrets
+              key: RABBITMQ_DEFAULT_PASS
         ports:
         - containerPort: 5672
         - containerPort: 15672
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 15672
-            scheme: HTTP
-          initialDelaySeconds: 10
-          periodSeconds: 5
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 15672
-            scheme: HTTP
-          initialDelaySeconds: 30
-          periodSeconds: 10
