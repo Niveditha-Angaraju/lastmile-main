@@ -17,14 +17,23 @@ try:
 except ImportError:
     _version_not_supported = True
 
-if _version_not_supported:
-    raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in station_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-    )
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# # # # if _version_not_supported:
+# # # #     raise RuntimeError(
+# # # # # #         f'The grpc package installed is at version {GRPC_VERSION},'
+# # # #         + ' but the generated code in station_pb2_grpc.py depends on'
+# # # #         + f' grpcio>={GRPC_GENERATED_VERSION}.'
+# # # #         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+# # # #         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+# # # #     )
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
 
 
 class StationServiceStub(object):
@@ -39,18 +48,15 @@ class StationServiceStub(object):
         self.GetStation = channel.unary_unary(
                 '/lastmile.station.StationService/GetStation',
                 request_serializer=station__pb2.StationRequest.SerializeToString,
-                response_deserializer=station__pb2.StationResponse.FromString,
-                _registered_method=True)
+                response_deserializer=station__pb2.StationResponse.FromString)
         self.ListStations = channel.unary_unary(
                 '/lastmile.station.StationService/ListStations',
                 request_serializer=station__pb2.StationListRequest.SerializeToString,
-                response_deserializer=station__pb2.StationListResponse.FromString,
-                _registered_method=True)
+                response_deserializer=station__pb2.StationListResponse.FromString)
         self.Health = channel.unary_unary(
                 '/lastmile.station.StationService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=station__pb2.StationResponse.FromString,
-                _registered_method=True)
+                response_deserializer=station__pb2.StationResponse.FromString)
 
 
 class StationServiceServicer(object):
@@ -127,8 +133,7 @@ class StationService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def ListStations(request,
@@ -154,8 +159,7 @@ class StationService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def Health(request,
@@ -181,5 +185,4 @@ class StationService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)

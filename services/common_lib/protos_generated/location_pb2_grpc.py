@@ -16,15 +16,24 @@ try:
 except ImportError:
     _version_not_supported = True
 
-if _version_not_supported:
-    raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in location_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-    )
-
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# # # if _version_not_supported:
+# # # #     raise RuntimeError(
+# # # # # #         f'The grpc package installed is at version {GRPC_VERSION},'
+# # # #         + ' but the generated code in location_pb2_grpc.py depends on'
+# # # #         + f' grpcio>={GRPC_GENERATED_VERSION}.'
+# # # #         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+# # # #         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+# # # #     )
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+# 
 
 class LocationServiceStub(object):
     """Missing associated documentation comment in .proto file."""
@@ -38,18 +47,15 @@ class LocationServiceStub(object):
         self.ReportLocation = channel.unary_unary(
                 '/lastmile.location.LocationService/ReportLocation',
                 request_serializer=location__pb2.DriverLocation.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                _registered_method=True)
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString)
         self.StreamProximity = channel.stream_stream(
                 '/lastmile.location.LocationService/StreamProximity',
                 request_serializer=location__pb2.DriverLocation.SerializeToString,
-                response_deserializer=location__pb2.ProximityEvent.FromString,
-                _registered_method=True)
+                response_deserializer=location__pb2.ProximityEvent.FromString)
         self.Health = channel.unary_unary(
                 '/lastmile.location.LocationService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                _registered_method=True)
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString)
 
 
 class LocationServiceServicer(object):
@@ -126,8 +132,7 @@ class LocationService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def StreamProximity(request_iterator,
@@ -153,8 +158,7 @@ class LocationService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def Health(request,
@@ -180,5 +184,4 @@ class LocationService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)

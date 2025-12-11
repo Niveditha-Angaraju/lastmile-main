@@ -16,15 +16,24 @@ try:
 except ImportError:
     _version_not_supported = True
 
-if _version_not_supported:
-    raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in rider_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-    )
-
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# # # if _version_not_supported:
+# # # #     raise RuntimeError(
+# # # # # #         f'The grpc package installed is at version {GRPC_VERSION},'
+# # # #         + ' but the generated code in rider_pb2_grpc.py depends on'
+# # # #         + f' grpcio>={GRPC_GENERATED_VERSION}.'
+# # # #         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+# # # #         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+# # # #     )
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+# 
 
 class RiderServiceStub(object):
     """Missing associated documentation comment in .proto file."""
@@ -38,23 +47,19 @@ class RiderServiceStub(object):
         self.RegisterRider = channel.unary_unary(
                 '/lastmile.rider.RiderService/RegisterRider',
                 request_serializer=rider__pb2.RegisterRiderRequest.SerializeToString,
-                response_deserializer=rider__pb2.RegisterRiderResponse.FromString,
-                _registered_method=True)
+                response_deserializer=rider__pb2.RegisterRiderResponse.FromString)
         self.RequestPickup = channel.unary_unary(
                 '/lastmile.rider.RiderService/RequestPickup',
                 request_serializer=rider__pb2.RiderRequest.SerializeToString,
-                response_deserializer=rider__pb2.RiderResponse.FromString,
-                _registered_method=True)
+                response_deserializer=rider__pb2.RiderResponse.FromString)
         self.TrackRide = channel.unary_unary(
                 '/lastmile.rider.RiderService/TrackRide',
                 request_serializer=rider__pb2.RiderRequest.SerializeToString,
-                response_deserializer=rider__pb2.RiderResponse.FromString,
-                _registered_method=True)
+                response_deserializer=rider__pb2.RiderResponse.FromString)
         self.Health = channel.unary_unary(
                 '/lastmile.rider.RiderService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=rider__pb2.RiderResponse.FromString,
-                _registered_method=True)
+                response_deserializer=rider__pb2.RiderResponse.FromString)
 
 
 class RiderServiceServicer(object):
@@ -142,8 +147,7 @@ class RiderService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def RequestPickup(request,
@@ -169,8 +173,7 @@ class RiderService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def TrackRide(request,
@@ -196,8 +199,7 @@ class RiderService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def Health(request,
@@ -223,5 +225,4 @@ class RiderService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)

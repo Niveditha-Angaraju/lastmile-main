@@ -17,14 +17,23 @@ try:
 except ImportError:
     _version_not_supported = True
 
-if _version_not_supported:
-    raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in driver_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-    )
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# # # # if _version_not_supported:
+# # # #     raise RuntimeError(
+# # # # # #         f'The grpc package installed is at version {GRPC_VERSION},'
+# # # #         + ' but the generated code in driver_pb2_grpc.py depends on'
+# # # #         + f' grpcio>={GRPC_GENERATED_VERSION}.'
+# # # #         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+# # # #         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+# # # #     )
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
 
 
 class DriverServiceStub(object):
@@ -39,23 +48,19 @@ class DriverServiceStub(object):
         self.RegisterDriver = channel.unary_unary(
                 '/lastmile.driver.DriverService/RegisterDriver',
                 request_serializer=driver__pb2.RegisterDriverRequest.SerializeToString,
-                response_deserializer=driver__pb2.RegisterDriverResponse.FromString,
-                _registered_method=True)
+                response_deserializer=driver__pb2.RegisterDriverResponse.FromString)
         self.UpdateRoute = channel.unary_unary(
                 '/lastmile.driver.DriverService/UpdateRoute',
                 request_serializer=driver__pb2.DriverRouteRequest.SerializeToString,
-                response_deserializer=driver__pb2.DriverRouteResponse.FromString,
-                _registered_method=True)
+                response_deserializer=driver__pb2.DriverRouteResponse.FromString)
         self.StreamLocation = channel.stream_unary(
                 '/lastmile.driver.DriverService/StreamLocation',
                 request_serializer=driver__pb2.LocationUpdate.SerializeToString,
-                response_deserializer=driver__pb2.Ack.FromString,
-                _registered_method=True)
+                response_deserializer=driver__pb2.Ack.FromString)
         self.Health = channel.unary_unary(
                 '/lastmile.driver.DriverService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=driver__pb2.Ack.FromString,
-                _registered_method=True)
+                response_deserializer=driver__pb2.Ack.FromString)
 
 
 class DriverServiceServicer(object):
@@ -144,8 +149,7 @@ class DriverService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def UpdateRoute(request,
@@ -171,8 +175,7 @@ class DriverService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def StreamLocation(request_iterator,
@@ -198,8 +201,7 @@ class DriverService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def Health(request,
@@ -225,5 +227,4 @@ class DriverService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)

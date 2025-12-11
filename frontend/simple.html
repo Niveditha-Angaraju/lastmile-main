@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LastMile - Simple Demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+        }
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 { margin: 0; }
+        .container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-right: 1px solid #ddd;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .panel {
+            margin-bottom: 1.5rem;
+        }
+        .panel h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        .station-item {
+            padding: 0.5rem;
+            background: #f8f9fa;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .station-item:hover {
+            background: #e9ecef;
+        }
+        .map-container {
+            flex: 1;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0.25rem 0;
+            width: 100%;
+        }
+        button:hover {
+            background: #229954;
+        }
+        .status {
+            padding: 0.5rem;
+            background: #e8f5e9;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚗 LastMile - Simple Demo</h1>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="panel">
+                <h2>📍 Stations</h2>
+                <div id="stations"></div>
+            </div>
+            <div class="panel">
+                <h2>🎮 Actions</h2>
+                <button onclick="loadStations()">Refresh Stations</button>
+                <button onclick="registerRider()">Register Rider</button>
+                <button onclick="registerDriver()">Register Driver</button>
+                <button onclick="requestPickup()">Request Pickup</button>
+            </div>
+            <div class="panel">
+                <h2>📊 Status</h2>
+                <div id="status" class="status">Ready</div>
+            </div>
+        </div>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:8080';
+        let map;
+        let markers = [];
+
+        // Initialize map
+        map = L.map('map').setView([12.9716, 77.5946], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Load stations
+        async function loadStations() {
+            try {
+                updateStatus('Loading stations...');
+                const response = await fetch(`${API_BASE}/api/stations`);
+                const data = await response.json();
+                
+                // Clear existing markers
+                markers.forEach(m => map.removeLayer(m));
+                markers = [];
+                
+                // Update station list
+                const stationsDiv = document.getElementById('stations');
+                stationsDiv.innerHTML = '';
+                
+                data.stations.forEach(station => {
+                    // Add to list
+                    const item = document.createElement('div');
+                    item.className = 'station-item';
+                    item.innerHTML = `<strong>${station.station_id}</strong><br>${station.name}`;
+                    item.onclick = () => selectStation(station);
+                    stationsDiv.appendChild(item);
+                    
+                    // Add marker
+                    const marker = L.marker([station.lat, station.lng])
+                        .addTo(map)
+                        .bindPopup(`<strong>${station.station_id}</strong><br>${station.name}`);
+                    markers.push(marker);
+                    
+                    // Add proximity circle
+                    L.circle([station.lat, station.lng], {
+                        radius: 200,
+                        color: 'blue',
+                        fillColor: 'blue',
+                        fillOpacity: 0.1
+                    }).addTo(map);
+                });
+                
+                updateStatus(`Loaded ${data.stations.length} stations`);
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`);
+                console.error('Error loading stations:', error);
+            }
+        }
+
+        function selectStation(station) {
+            updateStatus(`Selected: ${station.station_id}`);
+            // Highlight on map
+            map.setView([station.lat, station.lng], 15);
+        }
+
+        async function registerRider() {
+            const name = prompt('Rider name:');
+            const phone = prompt('Phone:', '0000000000');
+            if (!name) return;
+            
+            try {
+                updateStatus('Registering rider...');
+                const response = await fetch(`${API_BASE}/api/riders/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        rider_id: `rider-${Date.now()}`,
+                        name: name,
+                        phone: phone
+                    })
+                });
+                const data = await response.json();
+                updateStatus(`Rider registered: ${data.rider_id}`);
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`);
+            }
+        }
+
+        async function registerDriver() {
+            const name = prompt('Driver name:');
+            const phone = prompt('Phone:', '0000000000');
+            const vehicle = prompt('Vehicle No:', 'TEST-001');
+            if (!name) return;
+            
+            try {
+                updateStatus('Registering driver...');
+                const response = await fetch(`${API_BASE}/api/drivers/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        driver_id: `drv-${Date.now()}`,
+                        name: name,
+                        phone: phone,
+                        vehicle_no: vehicle
+                    })
+                });
+                const data = await response.json();
+                updateStatus(`Driver registered: ${data.driver_id}`);
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`);
+            }
+        }
+
+        async function requestPickup() {
+            const riderId = prompt('Rider ID:');
+            const stationId = prompt('Station ID:');
+            const destination = prompt('Destination:', 'Downtown');
+            if (!riderId || !stationId) return;
+            
+            try {
+                updateStatus('Requesting pickup...');
+                const response = await fetch(`${API_BASE}/api/riders/request-pickup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        rider_id: riderId,
+                        station_id: stationId,
+                        destination: destination
+                    })
+                });
+                const data = await response.json();
+                updateStatus(`Pickup requested: ${data.request_id}`);
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`);
+            }
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        // Load stations on page load
+        loadStations();
+        
+        // Auto-refresh every 10 seconds
+        setInterval(loadStations, 10000);
+    </script>
+</body>
+</html>
+

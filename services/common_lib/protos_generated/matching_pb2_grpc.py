@@ -16,15 +16,24 @@ try:
 except ImportError:
     _version_not_supported = True
 
-if _version_not_supported:
-    raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in matching_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-    )
-
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# # # if _version_not_supported:
+# # # #     raise RuntimeError(
+# # # # # #         f'The grpc package installed is at version {GRPC_VERSION},'
+# # # #         + ' but the generated code in matching_pb2_grpc.py depends on'
+# # # #         + f' grpcio>={GRPC_GENERATED_VERSION}.'
+# # # #         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+# # # #         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+# # # #     )
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+# 
 
 class MatchingServiceStub(object):
     """Missing associated documentation comment in .proto file."""
@@ -38,18 +47,15 @@ class MatchingServiceStub(object):
         self.FindMatches = channel.unary_unary(
                 '/lastmile.matching.MatchingService/FindMatches',
                 request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
-                _registered_method=True)
+                response_deserializer=matching__pb2.MatchResponse.FromString)
         self.StreamMatches = channel.stream_stream(
                 '/lastmile.matching.MatchingService/StreamMatches',
                 request_serializer=matching__pb2.MatchRequest.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
-                _registered_method=True)
+                response_deserializer=matching__pb2.MatchResponse.FromString)
         self.Health = channel.unary_unary(
                 '/lastmile.matching.MatchingService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=matching__pb2.MatchResponse.FromString,
-                _registered_method=True)
+                response_deserializer=matching__pb2.MatchResponse.FromString)
 
 
 class MatchingServiceServicer(object):
@@ -127,8 +133,7 @@ class MatchingService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def StreamMatches(request_iterator,
@@ -154,8 +159,7 @@ class MatchingService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def Health(request,
@@ -181,5 +185,4 @@ class MatchingService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)

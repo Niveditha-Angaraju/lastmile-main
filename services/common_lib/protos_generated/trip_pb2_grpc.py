@@ -16,15 +16,24 @@ try:
 except ImportError:
     _version_not_supported = True
 
-if _version_not_supported:
-    raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in trip_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-    )
-
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# # # if _version_not_supported:
+# # # #     raise RuntimeError(
+# # # # # #         f'The grpc package installed is at version {GRPC_VERSION},'
+# # # #         + ' but the generated code in trip_pb2_grpc.py depends on'
+# # # #         + f' grpcio>={GRPC_GENERATED_VERSION}.'
+# # # #         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+# # # #         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+# # # #     )
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+# 
 
 class TripServiceStub(object):
     """Missing associated documentation comment in .proto file."""
@@ -38,23 +47,19 @@ class TripServiceStub(object):
         self.CreateTrip = channel.unary_unary(
                 '/lastmile.trip.TripService/CreateTrip',
                 request_serializer=trip__pb2.CreateTripRequest.SerializeToString,
-                response_deserializer=trip__pb2.CreateTripResponse.FromString,
-                _registered_method=True)
+                response_deserializer=trip__pb2.CreateTripResponse.FromString)
         self.UpdateTrip = channel.unary_unary(
                 '/lastmile.trip.TripService/UpdateTrip',
                 request_serializer=trip__pb2.UpdateTripRequest.SerializeToString,
-                response_deserializer=trip__pb2.UpdateTripResponse.FromString,
-                _registered_method=True)
+                response_deserializer=trip__pb2.UpdateTripResponse.FromString)
         self.GetTrip = channel.unary_unary(
                 '/lastmile.trip.TripService/GetTrip',
                 request_serializer=trip__pb2.GetTripRequest.SerializeToString,
-                response_deserializer=trip__pb2.GetTripResponse.FromString,
-                _registered_method=True)
+                response_deserializer=trip__pb2.GetTripResponse.FromString)
         self.Health = channel.unary_unary(
                 '/lastmile.trip.TripService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=trip__pb2.CreateTripResponse.FromString,
-                _registered_method=True)
+                response_deserializer=trip__pb2.CreateTripResponse.FromString)
 
 
 class TripServiceServicer(object):
@@ -142,8 +147,7 @@ class TripService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def UpdateTrip(request,
@@ -169,8 +173,7 @@ class TripService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def GetTrip(request,
@@ -196,8 +199,7 @@ class TripService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def Health(request,
@@ -223,5 +225,4 @@ class TripService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)

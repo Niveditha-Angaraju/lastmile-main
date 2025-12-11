@@ -16,15 +16,24 @@ try:
 except ImportError:
     _version_not_supported = True
 
-if _version_not_supported:
-    raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in notification_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-    )
-
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# # # if _version_not_supported:
+# # # #     raise RuntimeError(
+# # # # # #         f'The grpc package installed is at version {GRPC_VERSION},'
+# # # #         + ' but the generated code in notification_pb2_grpc.py depends on'
+# # # #         + f' grpcio>={GRPC_GENERATED_VERSION}.'
+# # # #         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+# # # #         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+# # # #     )
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+# 
 
 class NotificationServiceStub(object):
     """Missing associated documentation comment in .proto file."""
@@ -38,18 +47,15 @@ class NotificationServiceStub(object):
         self.Send = channel.unary_unary(
                 '/lastmile.notification.NotificationService/Send',
                 request_serializer=notification__pb2.Notification.SerializeToString,
-                response_deserializer=notification__pb2.NotifyAck.FromString,
-                _registered_method=True)
+                response_deserializer=notification__pb2.NotifyAck.FromString)
         self.StreamNotifications = channel.stream_stream(
                 '/lastmile.notification.NotificationService/StreamNotifications',
                 request_serializer=notification__pb2.Notification.SerializeToString,
-                response_deserializer=notification__pb2.NotifyAck.FromString,
-                _registered_method=True)
+                response_deserializer=notification__pb2.NotifyAck.FromString)
         self.Health = channel.unary_unary(
                 '/lastmile.notification.NotificationService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=notification__pb2.NotifyAck.FromString,
-                _registered_method=True)
+                response_deserializer=notification__pb2.NotifyAck.FromString)
 
 
 class NotificationServiceServicer(object):
@@ -126,8 +132,7 @@ class NotificationService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def StreamNotifications(request_iterator,
@@ -153,8 +158,7 @@ class NotificationService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def Health(request,
@@ -180,5 +184,4 @@ class NotificationService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)

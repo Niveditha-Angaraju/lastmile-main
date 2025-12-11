@@ -73,28 +73,41 @@ def publish_pickup_request(payload):
 # RiderService Implementation
 # -----------------------------------------------------
 class RiderService(rider_pb2_grpc.RiderServiceServicer):
+    def RegisterRider(conn, rid, uid, name, phone):
+    try:
+        conn.execute(text("""
+            INSERT INTO riders (rider_id, user_id, name, phone)
+            VALUES (:rid, :uid, :name, :phone)
+            ON CONFLICT (rider_id) DO UPDATE
+            SET user_id = EXCLUDED.user_id,
+                name = EXCLUDED.name,
+                phone = EXCLUDED.phone
+        """), {"rid": rid, "uid": uid, "name": name, "phone": phone})
+        return True
+    except Exception:
+        logger.exception("RegisterRider error")
+        return False
+    # def RegisterRider(self, request, context):
+    #     profile = request.profile
+    #     rid = profile.rider_id or f"rider-{int(time.time()*1000)}"
 
-    def RegisterRider(self, request, context):
-        profile = request.profile
-        rid = profile.rider_id or f"rider-{int(time.time()*1000)}"
+    #     try:
+    #         with engine.begin() as conn:
+    #             conn.execute(text("""
+    #                 INSERT INTO riders(rider_id, user_id, name, phone)
+    #                 VALUES(:rid, :uid, :name, :phone)
+    #             """), {
+    #                 "rid": rid,
+    #                 "uid": profile.user_id,
+    #                 "name": profile.name,
+    #                 "phone": profile.phone,
+    #             })
+    #         logger.info("Registered rider: %s", rid)
+    #         return rider_pb2.RegisterRiderResponse(rider_id=rid, ok=True)
 
-        try:
-            with engine.begin() as conn:
-                conn.execute(text("""
-                    INSERT INTO riders(rider_id, user_id, name, phone)
-                    VALUES(:rid, :uid, :name, :phone)
-                """), {
-                    "rid": rid,
-                    "uid": profile.user_id,
-                    "name": profile.name,
-                    "phone": profile.phone,
-                })
-            logger.info("Registered rider: %s", rid)
-            return rider_pb2.RegisterRiderResponse(rider_id=rid, ok=True)
-
-        except Exception as e:
-            logger.exception("RegisterRider error: %s", e)
-            return rider_pb2.RegisterRiderResponse(ok=False)
+    #     except Exception as e:
+    #         logger.exception("RegisterRider error: %s", e)
+    #         return rider_pb2.RegisterRiderResponse(ok=False)
 
     def RequestPickup(self, request, context):
         payload = {

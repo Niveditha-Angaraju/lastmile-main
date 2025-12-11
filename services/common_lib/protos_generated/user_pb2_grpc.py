@@ -16,15 +16,24 @@ try:
 except ImportError:
     _version_not_supported = True
 
-if _version_not_supported:
-    raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in user_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-    )
-
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# Version check disabled for compatibility
+# # # if _version_not_supported:
+# # # #     raise RuntimeError(
+# # # # # #         f'The grpc package installed is at version {GRPC_VERSION},'
+# # # #         + ' but the generated code in user_pb2_grpc.py depends on'
+# # # #         + f' grpcio>={GRPC_GENERATED_VERSION}.'
+# # # #         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+# # # #         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+# # # #     )
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+if False:  # Disabled version check
+    pass
+# 
 
 class UserServiceStub(object):
     """Missing associated documentation comment in .proto file."""
@@ -38,23 +47,19 @@ class UserServiceStub(object):
         self.RegisterUser = channel.unary_unary(
                 '/lastmile.user.UserService/RegisterUser',
                 request_serializer=user__pb2.RegisterUserRequest.SerializeToString,
-                response_deserializer=user__pb2.RegisterUserResponse.FromString,
-                _registered_method=True)
+                response_deserializer=user__pb2.RegisterUserResponse.FromString)
         self.Login = channel.unary_unary(
                 '/lastmile.user.UserService/Login',
                 request_serializer=user__pb2.LoginRequest.SerializeToString,
-                response_deserializer=user__pb2.LoginResponse.FromString,
-                _registered_method=True)
+                response_deserializer=user__pb2.LoginResponse.FromString)
         self.GetUser = channel.unary_unary(
                 '/lastmile.user.UserService/GetUser',
                 request_serializer=user__pb2.GetUserRequest.SerializeToString,
-                response_deserializer=user__pb2.GetUserResponse.FromString,
-                _registered_method=True)
+                response_deserializer=user__pb2.GetUserResponse.FromString)
         self.Health = channel.unary_unary(
                 '/lastmile.user.UserService/Health',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=user__pb2.GetUserResponse.FromString,
-                _registered_method=True)
+                response_deserializer=user__pb2.GetUserResponse.FromString)
 
 
 class UserServiceServicer(object):
@@ -142,8 +147,7 @@ class UserService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def Login(request,
@@ -169,8 +173,7 @@ class UserService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def GetUser(request,
@@ -196,8 +199,7 @@ class UserService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
 
     @staticmethod
     def Health(request,
@@ -223,5 +225,4 @@ class UserService(object):
             compression,
             wait_for_ready,
             timeout,
-            metadata,
-            _registered_method=True)
+            metadata)
