@@ -119,16 +119,108 @@
 .status-scheduled {
   color: #ffc107;
   font-weight: bold;
+  text-transform: capitalize;
 }
 
 .status-active {
   color: #28a745;
   font-weight: bold;
+  text-transform: capitalize;
 }
 
 .status-completed {
   color: #6c757d;
   font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.status-badge.status-scheduled {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.status-active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-completed {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
+.trip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.trip-details {
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+.trip-time {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.trip-action-btn {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.trip-action-btn:hover {
+  background: #0056b3;
+}
+
+.trip-action-btn.complete-btn {
+  background: #28a745;
+}
+
+.trip-action-btn.complete-btn:hover {
+  background: #218838;
+}
+
+.driver-popup {
+  min-width: 200px;
+}
+
+.driver-popup strong {
+  color: #2c3e50;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.driver-popup div {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.custom-driver-icon {
+  background: transparent !important;
+  border: none !important;
 }
 
 .action-buttons {
@@ -155,6 +247,88 @@
 .map-container {
   flex: 1;
   position: relative;
+}
+
+.notifications-container {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.notification {
+  background: #28a745;
+  color: white;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: slideIn 0.3s ease-out;
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-message {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.notification-details {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.notification-close {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.notification-close:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.match-notification {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  border-left: 4px solid #fff;
+}
+
+.completed-notification {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  border-left: 4px solid #fff;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* Leaflet popup customization */

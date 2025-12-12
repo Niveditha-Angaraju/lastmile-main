@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle } from 'react-leaflet'
+import L from 'leaflet'
 import axios from 'axios'
+import { TripVisualization } from './components/TripVisualization'
+import { MatchNotifications } from './components/MatchNotifications'
 import './App.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8081'
@@ -66,11 +69,21 @@ function App() {
     try {
       const response = await axios.get(`${API_BASE}/api/trips`)
       if (response.data && response.data.trips) {
-        // Filter out completed trips for active trips display, or show all
-        const activeTrips = response.data.trips.filter(t => 
-          t.status === 'scheduled' || t.status === 'active'
-        )
-        setTrips(response.data.trips) // Show all trips
+        // Filter out completed trips and only show recent/active ones
+        const now = Date.now()
+        const oneHourAgo = now - 3600000 // 1 hour in ms
+        
+        const filteredTrips = response.data.trips
+          .filter(t => {
+            // Show if not completed
+            if (t.status !== 'completed') return true
+            // Or if completed but recent (within last hour)
+            if (t.end_time && t.end_time > oneHourAgo) return true
+            return false
+          })
+          .sort((a, b) => (b.start_time || 0) - (a.start_time || 0)) // Newest first
+        
+        setTrips(filteredTrips)
       }
     } catch (error) {
       console.error('Error loading trips:', error)
@@ -127,8 +140,17 @@ function App() {
     }
   }
 
+  const handleNewMatch = (trip) => {
+    // Center map on trip origin station
+    const station = stations.find(s => s.station_id === trip.origin_station)
+    if (station) {
+      setMapCenter([station.lat, station.lng])
+    }
+  }
+
   return (
     <div className="app">
+      <MatchNotifications trips={trips} onNewMatch={handleNewMatch} />
       <header className="app-header">
         <h1>🚗 LastMile - Ride Matching System</h1>
         <div className="controls">
@@ -165,23 +187,97 @@ function App() {
           </div>
 
           <div className="panel">
-            <h2>🚕 Active Trips ({trips.filter(t => t.status !== 'completed').length})</h2>
+            <h2>🚕 Active Trips ({trips.filter(t => {
+              if (!t.status || t.status === 'completed') return false
+              const now = Date.now()
+              const twoHoursAgo = now - 7200000
+              if (t.start_time && t.start_time < twoHoursAgo) return false
+              return true
+            }).length})</h2>
             <div className="trip-list">
               {trips.length === 0 ? (
                 <div className="trip-item" style={{fontStyle: 'italic', color: '#6c757d'}}>
                   No trips yet. Run a simulation to see matches!
                 </div>
               ) : (
-                trips.filter(t => t.status !== 'completed').map((trip) => (
-                  <div key={trip.trip_id} className="trip-item">
-                    <div><strong>Trip:</strong> {trip.trip_id}</div>
-                    <div><strong>Driver:</strong> {trip.driver_id}</div>
-                    <div><strong>Riders:</strong> {trip.rider_ids?.join(', ') || 'None'}</div>
-                    <div><strong>Status:</strong> <span className={`status-${trip.status}`}>{trip.status}</span></div>
-                    <div><strong>From:</strong> {trip.origin_station}</div>
-                    <div><strong>To:</strong> {trip.destination}</div>
-                  </div>
-                ))
+                trips
+                  .filter(t => {
+                    // Only show scheduled or active trips
+                    if (!t.status || t.status === 'completed') return false
+                    // Limit to recent trips (within last 2 hours)
+                    const now = Date.now()
+                    const twoHoursAgo = now - 7200000
+                    if (t.start_time && t.start_time < twoHoursAgo) return false
+                    return true
+                  })
+                  .sort((a, b) => (b.start_time || 0) - (a.start_time || 0)) // Newest first
+                  .slice(0, 20) // Limit to 20 most recent
+                  .map((trip) => {
+                    const statusIcon = {
+                      'scheduled': '⏳',
+                      'active': '🚗',
+                      'completed': '✅'
+                    }[trip.status] || '❓'
+                    
+                    return (
+                      <div key={trip.trip_id} className="trip-item">
+                        <div className="trip-header">
+                          <strong>{statusIcon} Trip: {trip.trip_id.substring(0, 12)}...</strong>
+                          <span className={`status-badge status-${trip.status}`}>{trip.status}</span>
+                        </div>
+                        <div className="trip-details">
+                          <div><strong>Driver:</strong> {trip.driver_id}</div>
+                          <div><strong>Riders:</strong> {trip.rider_ids?.length || 0} ({trip.rider_ids?.join(', ') || 'None'})</div>
+                          <div><strong>Route:</strong> {trip.origin_station} → {trip.destination}</div>
+                          {trip.start_time && (
+                            <div className="trip-time">
+                              <strong>Started:</strong> {new Date(trip.start_time).toLocaleTimeString()}
+                            </div>
+                          )}
+                          {trip.seats_reserved && (
+                            <div><strong>Seats:</strong> {trip.seats_reserved}</div>
+                          )}
+                        </div>
+                        {trip.status === 'scheduled' && (
+                          <button 
+                            className="trip-action-btn"
+                            onClick={async () => {
+                              try {
+                                const response = await axios.post(`${API_BASE}/api/trips/${trip.trip_id}/start`)
+                                if (response.data.ok) {
+                                  setTimeout(() => loadTrips(), 500)
+                                }
+                              } catch (e) {
+                                console.error('Error starting trip:', e)
+                                alert('Failed to start trip: ' + (e.response?.data?.error || e.message))
+                              }
+                            }}
+                          >
+                            ▶️ Start Trip
+                          </button>
+                        )}
+                        {trip.status === 'active' && (
+                          <button 
+                            className="trip-action-btn complete-btn"
+                            onClick={async () => {
+                              if (!confirm(`Complete trip ${trip.trip_id.substring(0, 12)}...?`)) return
+                              try {
+                                const response = await axios.post(`${API_BASE}/api/trips/${trip.trip_id}/complete`)
+                                if (response.data.ok) {
+                                  setTimeout(() => loadTrips(), 500)
+                                }
+                              } catch (e) {
+                                console.error('Error completing trip:', e)
+                                alert('Failed to complete trip: ' + (e.response?.data?.error || e.message))
+                              }
+                            }}
+                          >
+                            ✅ Complete Trip
+                          </button>
+                        )}
+                      </div>
+                    )
+                  })
               )}
             </div>
           </div>
@@ -260,6 +356,9 @@ function App() {
                 pathOptions={{ color: 'red', fillColor: 'red', fillOpacity: 0.2, weight: 3 }}
               />
             )}
+
+            {/* Trip visualization - drivers, routes, matches */}
+            <TripVisualization trips={trips} stations={stations} />
           </MapContainer>
         </div>
       </div>

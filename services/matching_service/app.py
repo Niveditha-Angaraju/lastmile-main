@@ -51,7 +51,7 @@ RABBIT_URL = os.getenv("RABBITMQ_URL", "amqp://guest:guest@localhost:5672/")
 GRPC_PORT = int(os.getenv("GRPC_PORT", "50054"))
 TRIP_SERVICE_HOST = os.getenv("TRIP_SERVICE_HOST", "localhost:50055")
 NOTIFICATION_SERVICE_HOST = os.getenv("NOTIFICATION_SERVICE_HOST", "localhost:50056")
-DEFAULT_SEATS = int(os.getenv("DEFAULT_SEATS", 2))
+DEFAULT_SEATS = int(os.getenv("DEFAULT_SEATS", 5))
 
 # memory stores
 station_waiting_riders = {}   # station_id -> list of riders
@@ -166,13 +166,17 @@ def on_driver_near_station(ch, method, props, body):
         if driver_dest:
             driver_destination_state[driver_id] = driver_dest
 
-        # Initialize seat state if new driver
+        # Initialize or update seat state
+        # Use the seats from the event as the source of truth
+        # This ensures the driver's current seat availability is always accurate
         if driver_id not in driver_seat_state:
             driver_seat_state[driver_id] = seats_from_event
             logger.info(f"[DRIVER] Init seats {driver_id} = {seats_from_event}")
         else:
-            # sync seats if event has lower seat count (safety)
-            if seats_from_event < driver_seat_state[driver_id]:
+            # Update seat state to match the event (event is source of truth)
+            # Only update if event shows different seats (allows manual seat updates)
+            if seats_from_event != driver_seat_state[driver_id]:
+                logger.info(f"[DRIVER] Updating seats {driver_id}: {driver_seat_state[driver_id]} → {seats_from_event}")
                 driver_seat_state[driver_id] = seats_from_event
 
         seats = driver_seat_state[driver_id]

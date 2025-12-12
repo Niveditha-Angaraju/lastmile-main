@@ -209,8 +209,9 @@ def get_trips():
                 SELECT trip_id, driver_id, rider_ids, origin_station, destination,
                        status, start_time, end_time, seats_reserved
                 FROM trips
+                WHERE status != 'completed' OR end_time > (EXTRACT(EPOCH FROM NOW()) * 1000 - 3600000)
                 ORDER BY start_time DESC
-                LIMIT 100
+                LIMIT 50
             """))
             
             for row in result:
@@ -346,8 +347,33 @@ def get_trip(trip_id):
         logger.error(f"Error getting trip: {e}")
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/trips/<trip_id>/start', methods=['POST'])
+def start_trip(trip_id):
+    """Mark trip as active (started)"""
+    try:
+        stub, channel = get_trip_stub()
+        
+        update = trip_pb2.Trip(
+            trip_id=trip_id,
+            status="active",
+            rider_ids=[]
+        )
+        
+        req = trip_pb2.UpdateTripRequest(trip=update)
+        res = stub.UpdateTrip(req)
+        channel.close()
+        
+        if res.ok:
+            return jsonify({"ok": True, "status": "active"})
+        else:
+            return jsonify({"error": "Update failed"}), 400
+    except Exception as e:
+        logger.error(f"Error starting trip: {e}")
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/trips/<trip_id>/complete', methods=['POST'])
 def complete_trip(trip_id):
+    """Mark trip as completed"""
     try:
         stub, channel = get_trip_stub()
         
@@ -362,7 +388,7 @@ def complete_trip(trip_id):
         channel.close()
         
         if res.ok:
-            return jsonify({"ok": True})
+            return jsonify({"ok": True, "status": "completed"})
         else:
             return jsonify({"error": "Update failed"}), 400
     except Exception as e:
